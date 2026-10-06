@@ -21,4 +21,20 @@ struct BoardViewModel {
     func toggleTile() {
         
     }
+    
+    func tileValue(row: Int, col: Int) -> String {
+        guard (0..<3).contains(row), (0..<3).contains(col) else {
+            return "💀"
+        }
+        
+        let rawBoard = Array(board)
+        let tile = rawBoard[row * 3 + col]
+        
+        return switch tile {
+        case "X": "❌"
+        case "O": "⭕️"
+        case ".": "·"
+        default: "💀"
+        }
+    }
 }

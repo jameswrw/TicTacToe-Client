@@ -8,16 +8,18 @@
 import SwiftUI
 
 struct BoardView: View {
-    @State var viewModel = BoardViewModel(board: ".........")
+    @State var viewModel = BoardViewModel(board: "..XOO..XX")
     
     var body: some View {
         VStack {
             Text("Match")
                 .font(.largeTitle)
-            row
-            row
-            row
+            row(0)
+            row(1)
+            row(2)
         }
+        .padding()
+
         HStack {
             Button {
                 viewModel.playMove()
@@ -25,22 +27,24 @@ struct BoardView: View {
                 Text("Make move")
             }
         }
+        .padding()
     }
     
-    var tile: some View {
+    func tile(row: Int, col: Int) -> some View {
         Button {
             viewModel.toggleTile()
         } label: {
-            Text("🅾️")
+            Text(viewModel.tileValue(row: row, col: col))
                 .font(.largeTitle)
+                .frame(width: 50, height: 50)
         }
     }
     
-    var row: some View {
+    func row(_ row: Int) -> some View {
         HStack {
-            tile
-            tile
-            tile
+            tile(row: row, col: 0)
+            tile(row: row, col: 1)
+            tile(row: row, col: 2)
         }
     }
 }
