@@ -16,6 +16,23 @@ final class PlayerListViewModel {
     var playerSelection : Player.ID? = nil
     
     func fetchPlayers() async throws {
-        players = try await Server.shared.request(url: TicTacToeAPI.fetchPlayers.rawValue, method: .get)
+        players = try await Server.shared.request(url: TicTacToeAPI.player.rawValue, method: .get)
+    }
+    
+    func createPlayer(firstName: String, lastName: String) async throws {
+        let coder = JSONEncoder()
+        let player = CreatePlayer(firstName: firstName, lastName: lastName)
+        let playerData = try coder.encode(player)
+        
+        do {
+            let newPlayer: Player = try await Server.shared.request(
+                url: TicTacToeAPI.createPlayer.rawValue,
+                body: playerData,
+                method: .post
+            )
+            players.append(newPlayer)
+        } catch {
+            print("Request failed")
+        }
     }
 }
