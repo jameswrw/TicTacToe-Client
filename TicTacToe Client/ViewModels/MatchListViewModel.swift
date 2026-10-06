@@ -13,6 +13,7 @@ import Observation
 final class MatchListViewModel {
     
     var matches: [Match] = []
+    var matchSelection : Match.ID? = nil
 
     func fetchMatches() async throws {
         matches = try await Server.shared.request(url: TicTacToeAPI.match.rawValue, method: .get)

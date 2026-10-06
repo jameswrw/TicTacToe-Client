@@ -13,7 +13,8 @@ import Observation
 final class PlayerListViewModel {
     
     var players: [Player] = []
-
+    var playerSelection : Player.ID? = nil
+    
     func fetchPlayers() async throws {
         players = try await Server.shared.request(url: TicTacToeAPI.fetchPlayers.rawValue, method: .get)
     }

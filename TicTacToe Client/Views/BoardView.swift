@@ -8,7 +8,11 @@
 import SwiftUI
 
 struct BoardView: View {
-    @State var viewModel = BoardViewModel(board: "..XOO..XX")
+    @State var viewModel: BoardViewModel
+    
+    init(viewModel: BoardViewModel) {
+        self._viewModel = State(initialValue: viewModel)
+    }
     
     var body: some View {
         VStack {
@@ -50,5 +54,5 @@ struct BoardView: View {
 }
 
 #Preview {
-    BoardView()
+    BoardView(viewModel: BoardViewModel(board: "OXOXXOX.."))
 }

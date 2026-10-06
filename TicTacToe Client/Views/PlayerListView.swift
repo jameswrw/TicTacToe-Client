@@ -8,18 +8,22 @@
 import SwiftUI
 
 struct PlayerListView: View {
-    @State private var viewModel = PlayerListViewModel()
+    @State private var viewModel: PlayerListViewModel
+    
+    init(viewModel: PlayerListViewModel) {
+        self._viewModel = State(initialValue: viewModel)
+    }
     
     var body: some View {
         VStack {
             Text("Players")
                 .font(.largeTitle)
             
-            Table(viewModel.players) {
+            Table(viewModel.players, selection: $viewModel.playerSelection) {
                 TableColumn("First Name", value: \.firstName)
                 TableColumn("Last Name", value: \.lastName)
             }
-            .lineLimit(3)
+            .frame(minHeight: 120)
         }
         .task {
             do {
@@ -32,5 +36,5 @@ struct PlayerListView: View {
 }
 
 #Preview {
-    PlayerListView()
+    PlayerListView(viewModel: PlayerListViewModel())
 }

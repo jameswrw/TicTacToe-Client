@@ -8,14 +8,18 @@
 import SwiftUI
 
 struct MatchListView: View {
-    @State private var viewModel = MatchListViewModel()
+    @State private var viewModel: MatchListViewModel
+    
+    init(viewModel: MatchListViewModel) {
+        self._viewModel = State(initialValue: viewModel)
+    }
     
     var body: some View {
         VStack {
             Text("Matches")
                 .font(.largeTitle)
             
-            Table(viewModel.matches) {
+            Table(viewModel.matches, selection: $viewModel.matchSelection) {
                 TableColumn("Player One", value: \.player1)
                 TableColumn("Player Two", value: \.player2)
                 TableColumn("Winner") { match in
@@ -23,7 +27,7 @@ struct MatchListView: View {
                 }
                 TableColumn("Board", value: \.board)
             }
-            .lineLimit(3)
+            .frame(minHeight: 120)
         }
         .task {
             do {
@@ -36,5 +40,5 @@ struct MatchListView: View {
 }
 
 #Preview {
-    MatchListView()
+    MatchListView(viewModel: MatchListViewModel())
 }
