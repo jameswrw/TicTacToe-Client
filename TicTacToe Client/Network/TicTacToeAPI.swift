@@ -8,6 +8,7 @@
 import Foundation
 
 enum URLParameters: String {
+    case playerID = "{playerID}"
     case matchID = "{matchID}"
 }
 
@@ -18,8 +19,10 @@ enum QueryParameters: String {
 
 enum TicTacToeAPI: String {
     case baseURL = "http://localhost:8080"
+    case login = "/player/login"
     case player = "/player"
     case createPlayer = "/player/create"
+    case oppenents = "/player/{playerID}/opponents"
     case match = "/match"
     case fetchMatch = "/match/{matchID}"
 }

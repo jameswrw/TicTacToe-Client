@@ -16,4 +16,6 @@ struct Player: Decodable, Identifiable {
 struct CreatePlayer: Encodable {
     let firstName: String
     let lastName: String
+    let userName: String
+    let password: String
 }

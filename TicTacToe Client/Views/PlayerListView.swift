@@ -10,9 +10,7 @@ import SwiftUI
 struct PlayerListView: View {
     @State private var viewModel: PlayerListViewModel
     @State private var showCreatePlayer = false
-    @State private var newPlayerFirstName = ""
-    @State private var newPlayerLastName = ""
-
+    
     init(viewModel: PlayerListViewModel) {
         self._viewModel = State(initialValue: viewModel)
     }
@@ -37,29 +35,35 @@ struct PlayerListView: View {
         }
         .task {
             do {
-                try await viewModel.fetchPlayers()
+                try await viewModel.fetchOpponents()
             } catch {
-                print("Unable to fetch players: \(error)")
+                print("Unable to fetch opponents: \(error)")
             }
         }
         .alert("Create Player", isPresented: $showCreatePlayer) {
             VStack {
                 HStack {
-                    TextField("First name", text: $newPlayerFirstName)
-                    TextField("Last name", text: $newPlayerLastName)
+                    TextField("User name", text: $viewModel.newPlayerUserName)
+                    SecureField("Password", text: $viewModel.newPlayerPassword)
+                    TextField("First name", text: $viewModel.newPlayerFirstName)
+                    TextField("Last name", text: $viewModel.newPlayerLastName)
                 }
                 HStack {
                     Button("Create", role: .confirm) {
                         Task {
                             do {
-                                let newPlayer = try await viewModel.createPlayer(firstName: newPlayerFirstName, lastName: newPlayerLastName)
-                                print(newPlayer)
+                                try await viewModel.createPlayer(
+                                    firstName: viewModel.newPlayerFirstName,
+                                    lastName: viewModel.newPlayerLastName,
+                                    userName: viewModel.newPlayerUserName,
+                                    password: viewModel.newPlayerPassword
+                                )
                             } catch {
                                 print("Failed to create player")
                             }
                         }
                     }
-                    .disabled(newPlayerFirstName == "" || newPlayerLastName == "")
+                    .disabled(viewModel.newPlayerFirstName == "" || viewModel.newPlayerLastName == "")
                     Button("Cancel", role: .cancel) { }
                 }
             }
