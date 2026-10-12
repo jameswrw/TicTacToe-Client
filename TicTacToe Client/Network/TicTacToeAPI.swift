@@ -24,6 +24,7 @@ enum TicTacToeAPI: String {
     case createPlayer = "/player/create"
     case oppenents = "/player/{playerID}/opponents"
     case match = "/match"
+    case createMatch = "/match/create"
     case fetchMatch = "/match/{matchID}"
 }
 
