@@ -12,7 +12,8 @@ import Observation
 @Observable
 final class OpponentListViewModel {
     
-    var opponents: [Player] = []
+    var session: Session
+    
     var playerSelection : Player.ID? = nil
     
     var newPlayerFirstName = ""
@@ -20,9 +21,13 @@ final class OpponentListViewModel {
     var newPlayerUserName = ""
     var newPlayerPassword = ""
     
+    init(session: Session) {
+        self.session = session
+    }
+    
     func fetchOpponents(playerID: UUID) async {
         do {
-            opponents = try await Server.shared.request(
+            session.opponents = try await Server.shared.request(
                 url: TicTacToeAPI.oppenents.rawValue,
                 parameters: [.playerID: playerID.uuidString],
                 method: .get)
@@ -42,7 +47,7 @@ final class OpponentListViewModel {
                 body: playerData,
                 method: .post
             )
-            opponents.append(newPlayer)
+            session.opponents.append(newPlayer)
         } catch {
             print("Request failed")
         }

@@ -34,9 +34,6 @@ struct LoginView: View {
             } label: {
                 Text("Login")
             }
-            if let player = session.currentPlayer {
-                Text(player.firstName)
-            }
         }
         .padding()
     }
@@ -44,5 +41,8 @@ struct LoginView: View {
 
 #Preview {
     @Previewable @Environment(Session.self) var session
-    LoginView(viewModel: LoginViewModel(session: session), playerViewModel: OpponentListViewModel())
+    LoginView(
+        viewModel: LoginViewModel(session: session),
+        playerViewModel: OpponentListViewModel(session: session)
+    )
 }

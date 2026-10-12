@@ -36,6 +36,7 @@ struct MatchListView: View {
                 Text("New match")
             }
         }
+        .padding()
         .task {
             do {
                 try await viewModel.fetchMatches()

@@ -3,8 +3,12 @@ import Playgrounds
 
 struct ContentView: View {
     @Environment(Session.self) var session
-    @State private var opponentListViewModel = OpponentListViewModel()
+    @State private var opponentListViewModel: OpponentListViewModel
 
+    init(session: Session) {
+        self._opponentListViewModel = State(initialValue: OpponentListViewModel(session: session))
+    }
+    
     var loginViewModel: LoginViewModel {
         LoginViewModel(session: session)
     }
@@ -28,7 +32,7 @@ struct ContentView: View {
                         viewModel: loginViewModel,
                         playerViewModel: opponentListViewModel
                     )
-                    PlayerListView(viewModel: opponentListViewModel)
+                    OpponentListView(viewModel: opponentListViewModel)
                 }
             }, content: {
                 if opponentListViewModel.playerSelection != nil {
@@ -37,7 +41,7 @@ struct ContentView: View {
                     EmptyView()
                 }
             }, detail: {
-                if matchListViewModel.matchSelection != nil {
+                if session.opponent != nil {
                     BoardView(viewModel: boardViewModel)
                 } else {
                     EmptyView()
@@ -48,7 +52,8 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView()
+    @Previewable @Environment(Session.self) var session
+    ContentView(session: session)
 }
 
 #Playground {

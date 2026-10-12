@@ -4,7 +4,7 @@ import SwiftUI
     @State private var session = Session()
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(session: session)
                 .environment(session)
         }
     }

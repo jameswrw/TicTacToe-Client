@@ -1,5 +1,5 @@
 //
-//  PlayerListView.swift
+//  OpponentListVi.swift
 //  TicTacToe Client
 //
 //  Created by James Weatherley on 05/10/2026.
@@ -7,16 +7,16 @@
 
 import SwiftUI
 
-struct PlayerListView: View {
+struct OpponentListView: View {
     @Bindable var viewModel: OpponentListViewModel
     @State private var showCreatePlayer = false
     
     var body: some View {
         VStack {
-            Text("Players")
+            Text("Opponents")
                 .font(.largeTitle)
             
-            Table(viewModel.opponents, selection: $viewModel.playerSelection) {
+            Table(viewModel.session.opponents, selection: $viewModel.playerSelection) {
                 TableColumn("First Name", value: \.firstName)
                 TableColumn("Last Name", value: \.lastName)
             }
@@ -28,6 +28,7 @@ struct PlayerListView: View {
                 Text("New player")
             }
         }
+        .padding()
         .alert("Create Player", isPresented: $showCreatePlayer) {
             VStack {
                 TextField("User name", text: $viewModel.newPlayerUserName)
@@ -57,5 +58,6 @@ struct PlayerListView: View {
 }
 
 #Preview {
-    PlayerListView(viewModel: OpponentListViewModel())
+    @Previewable @Environment(Session.self) var session
+    OpponentListView(viewModel: OpponentListViewModel(session: session))
 }

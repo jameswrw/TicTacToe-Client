@@ -9,4 +9,6 @@ import Observation
 @Observable
 final class Session {
     var currentPlayer: Player? = nil
+    var opponents: [Player] = []
+    var opponent: Player? = nil
 }
