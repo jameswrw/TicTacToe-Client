@@ -16,7 +16,7 @@ struct OpponentListView: View {
             Text("Opponents")
                 .font(.largeTitle)
             
-            Table(viewModel.session.opponents, selection: $viewModel.playerSelection) {
+            Table(viewModel.session.opponents, selection: $viewModel.session.opponent) {
                 TableColumn("First Name", value: \.firstName)
                 TableColumn("Last Name", value: \.lastName)
             }

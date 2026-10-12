@@ -10,5 +10,6 @@ import Observation
 final class Session {
     var currentPlayer: Player? = nil
     var opponents: [Player] = []
-    var opponent: Player? = nil
+    var opponent: Player.ID? = nil
+    var match: Match.ID? = nil
 }

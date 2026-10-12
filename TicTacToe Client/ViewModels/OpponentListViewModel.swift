@@ -12,10 +12,7 @@ import Observation
 @Observable
 final class OpponentListViewModel {
     
-    var session: Session
-    
-    var playerSelection : Player.ID? = nil
-    
+    var session: Session    
     var newPlayerFirstName = ""
     var newPlayerLastName = ""
     var newPlayerUserName = ""

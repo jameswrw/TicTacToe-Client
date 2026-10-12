@@ -12,9 +12,14 @@ import Observation
 @Observable
 final class MatchListViewModel {
     
+    var session: Session
     var matches: [Match] = []
     var matchSelection : Match.ID? = nil
 
+    init(session: Session) {
+        self.session = session
+    }
+    
     func fetchMatches() async throws {
         matches = try await Server.shared.request(url: TicTacToeAPI.match.rawValue, method: .get)
     }

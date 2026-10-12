@@ -8,13 +8,9 @@
 import SwiftUI
 
 struct MatchListView: View {
-    @State private var viewModel: MatchListViewModel
+    @Bindable var viewModel: MatchListViewModel
     @State private var showCreateMatch = false
 
-    init(viewModel: MatchListViewModel) {
-        self._viewModel = State(initialValue: viewModel)
-    }
-    
     var body: some View {
         VStack {
             Text("Matches")
@@ -62,5 +58,6 @@ struct MatchListView: View {
 }
 
 #Preview {
-    MatchListView(viewModel: MatchListViewModel())
+    @Previewable @Environment(Session.self) var session
+    MatchListView(viewModel: MatchListViewModel(session: session))
 }

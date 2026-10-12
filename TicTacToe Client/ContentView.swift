@@ -4,16 +4,15 @@ import Playgrounds
 struct ContentView: View {
     @Environment(Session.self) var session
     @State private var opponentListViewModel: OpponentListViewModel
+    @State private var matchListViewModel: MatchListViewModel
 
     init(session: Session) {
         self._opponentListViewModel = State(initialValue: OpponentListViewModel(session: session))
+        self._matchListViewModel = State(initialValue: MatchListViewModel(session: session))
     }
     
     var loginViewModel: LoginViewModel {
         LoginViewModel(session: session)
-    }
-    var matchListViewModel: MatchListViewModel {
-        MatchListViewModel()
     }
     var boardViewModel: BoardViewModel {
         BoardViewModel(board: "..XOO..XX")
@@ -35,13 +34,13 @@ struct ContentView: View {
                     OpponentListView(viewModel: opponentListViewModel)
                 }
             }, content: {
-                if opponentListViewModel.playerSelection != nil {
+                if session.opponent != nil {
                     MatchListView(viewModel: matchListViewModel)
                 } else {
                     EmptyView()
                 }
             }, detail: {
-                if session.opponent != nil {
+                if session.match != nil {
                     BoardView(viewModel: boardViewModel)
                 } else {
                     EmptyView()
