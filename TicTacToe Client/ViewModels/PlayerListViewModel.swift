@@ -24,13 +24,15 @@ final class PlayerListViewModel {
         players = try await Server.shared.request(url: TicTacToeAPI.player.rawValue, method: .get)
     }
     
-    func fetchOpponents() async throws {
-        guard let playerSelection else { return }
-        
-        players = try await Server.shared.request(
-            url: TicTacToeAPI.oppenents.rawValue,
-            parameters: [.playerID: playerSelection.uuidString],
-            method: .get)
+    func fetchOpponents(playerID: UUID) async {
+        do {
+            players = try await Server.shared.request(
+                url: TicTacToeAPI.oppenents.rawValue,
+                parameters: [.playerID: playerID.uuidString],
+                method: .get)
+        } catch {
+            print(error)
+        }
     }
     
     func createPlayer(firstName: String, lastName: String, userName: String, password: String) async throws {

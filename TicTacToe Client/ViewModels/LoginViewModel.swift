@@ -7,26 +7,30 @@
 
 import Foundation
 
-struct LoginViewModel {
+@Observable
+final class LoginViewModel {
     var userName = ""
     var password = ""
-    
-    func login() async -> Player? {
-        guard userName.count > 0, password.count > 0 else { return nil }
+    var loggedInPlayer: Player? = nil
+
+    func login() async {
+        guard userName.count > 0, password.count > 0 else {
+            loggedInPlayer = nil
+            return
+        }
+        
         let credentials = Credentials(userName: userName, password: password)
         let coder = JSONEncoder()
-        var player: Player? = nil
         
         do {
             let body = try coder.encode(credentials)
-            player = try await Server.shared.request(
+            loggedInPlayer = try await Server.shared.request(
                 url: TicTacToeAPI.login.rawValue,
                 body: body,
                 method: .post
             )
         } catch {
-            player = nil
+            loggedInPlayer = nil
         }
-        return player
     }
 }

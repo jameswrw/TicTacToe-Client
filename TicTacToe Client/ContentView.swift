@@ -9,16 +9,29 @@ struct ContentView: View {
     let boardViewModel = BoardViewModel(board: "..XOO..XX")
 
     var body: some View {
-        VStack {
-            LoginView(viewModel: loginViewModel)
-            PlayerListView(viewModel: playerListViewModel)
-            if playerListViewModel.playerSelection != nil {
-                MatchListView(viewModel: matchListViewModel)
+        NavigationSplitView(
+            sidebar: {
+                VStack {
+                    LoginView(
+                        viewModel: loginViewModel,
+                        playerViewModel: playerListViewModel
+                    )
+                    PlayerListView(viewModel: playerListViewModel)
+                }
+            }, content: {
+                if playerListViewModel.playerSelection != nil {
+                    MatchListView(viewModel: matchListViewModel)
+                } else {
+                    EmptyView()
+                }
+            }, detail: {
                 if matchListViewModel.matchSelection != nil {
                     BoardView(viewModel: boardViewModel)
+                } else {
+                    EmptyView()
                 }
             }
-        }
+        )
     }
 }
 

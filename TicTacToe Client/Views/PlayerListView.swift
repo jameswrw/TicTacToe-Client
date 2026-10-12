@@ -33,13 +33,6 @@ struct PlayerListView: View {
             }
 
         }
-        .task {
-            do {
-                try await viewModel.fetchOpponents()
-            } catch {
-                print("Unable to fetch opponents: \(error)")
-            }
-        }
         .alert("Create Player", isPresented: $showCreatePlayer) {
             VStack {
                 HStack {

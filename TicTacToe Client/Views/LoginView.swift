@@ -10,9 +10,11 @@ import SwiftUI
 struct LoginView: View {
     
     @State private var viewModel: LoginViewModel
+    private var playerViewModel: PlayerListViewModel
     
-    init(viewModel: LoginViewModel) {
+    init(viewModel: LoginViewModel, playerViewModel: PlayerListViewModel) {
         self._viewModel = State(initialValue: viewModel)
+        self.playerViewModel = playerViewModel
     }
     
     var body: some View {
@@ -23,8 +25,10 @@ struct LoginView: View {
             SecureField("Password", text: $viewModel.password)
             Button {
                 Task {
-                    let player = await viewModel.login()
-                    print(player ?? "nil")
+                    await viewModel.login()
+                    if let player = viewModel.loggedInPlayer {
+                        await playerViewModel.fetchOpponents(playerID: player.id)
+                    }
                 }
             } label: {
                 Text("Login")
@@ -35,5 +39,5 @@ struct LoginView: View {
 }
 
 #Preview {
-    LoginView(viewModel: LoginViewModel())
+    LoginView(viewModel: LoginViewModel(), playerViewModel: PlayerListViewModel())
 }
