@@ -9,12 +9,13 @@ import SwiftUI
 
 struct LoginView: View {
     
+    @Environment(Session.self) var session
     @State private var viewModel: LoginViewModel
-    private var playerViewModel: PlayerListViewModel
-    
-    init(viewModel: LoginViewModel, playerViewModel: PlayerListViewModel) {
+    var opponentListViewModel: OpponentListViewModel
+        
+    init(viewModel: LoginViewModel, playerViewModel: OpponentListViewModel) {
         self._viewModel = State(initialValue: viewModel)
-        self.playerViewModel = playerViewModel
+        self.opponentListViewModel = playerViewModel
     }
     
     var body: some View {
@@ -26,12 +27,15 @@ struct LoginView: View {
             Button {
                 Task {
                     await viewModel.login()
-                    if let player = viewModel.loggedInPlayer {
-                        await playerViewModel.fetchOpponents(playerID: player.id)
+                    if let player = session.currentPlayer {
+                        await opponentListViewModel.fetchOpponents(playerID: player.id)
                     }
                 }
             } label: {
                 Text("Login")
+            }
+            if let player = session.currentPlayer {
+                Text(player.firstName)
             }
         }
         .padding()
@@ -39,5 +43,6 @@ struct LoginView: View {
 }
 
 #Preview {
-    LoginView(viewModel: LoginViewModel(), playerViewModel: PlayerListViewModel())
+    @Previewable @Environment(Session.self) var session
+    LoginView(viewModel: LoginViewModel(session: session), playerViewModel: OpponentListViewModel())
 }

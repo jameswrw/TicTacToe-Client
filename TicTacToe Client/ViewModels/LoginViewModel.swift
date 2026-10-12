@@ -6,16 +6,21 @@
 //
 
 import Foundation
+import SwiftUI
 
 @Observable
 final class LoginViewModel {
     var userName = ""
     var password = ""
-    var loggedInPlayer: Player? = nil
+    var session: Session
+
+    init(session: Session) {
+        self.session = session
+    }
 
     func login() async {
         guard userName.count > 0, password.count > 0 else {
-            loggedInPlayer = nil
+            session.currentPlayer = nil
             return
         }
         
@@ -24,13 +29,13 @@ final class LoginViewModel {
         
         do {
             let body = try coder.encode(credentials)
-            loggedInPlayer = try await Server.shared.request(
+            session.currentPlayer = try await Server.shared.request(
                 url: TicTacToeAPI.login.rawValue,
                 body: body,
                 method: .post
             )
         } catch {
-            loggedInPlayer = nil
+            session.currentPlayer = nil
         }
     }
 }

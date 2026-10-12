@@ -2,24 +2,36 @@ import SwiftUI
 import Playgrounds
 
 struct ContentView: View {
+    @Environment(Session.self) var session
+    @State private var opponentListViewModel = OpponentListViewModel()
 
-    let loginViewModel = LoginViewModel()
-    let playerListViewModel = PlayerListViewModel()
-    let matchListViewModel = MatchListViewModel()
-    let boardViewModel = BoardViewModel(board: "..XOO..XX")
+    var loginViewModel: LoginViewModel {
+        LoginViewModel(session: session)
+    }
+    var matchListViewModel: MatchListViewModel {
+        MatchListViewModel()
+    }
+    var boardViewModel: BoardViewModel {
+        BoardViewModel(board: "..XOO..XX")
+    }
 
     var body: some View {
         NavigationSplitView(
             sidebar: {
                 VStack {
+                    // Display currently logged-in player from session
+                    if let player = session.currentPlayer {
+                        Text("Logged in as: \(player.firstName) \(player.lastName)")
+                            .padding(.bottom, 8)
+                    }
                     LoginView(
                         viewModel: loginViewModel,
-                        playerViewModel: playerListViewModel
+                        playerViewModel: opponentListViewModel
                     )
-                    PlayerListView(viewModel: playerListViewModel)
+                    PlayerListView(viewModel: opponentListViewModel)
                 }
             }, content: {
-                if playerListViewModel.playerSelection != nil {
+                if opponentListViewModel.playerSelection != nil {
                     MatchListView(viewModel: matchListViewModel)
                 } else {
                     EmptyView()

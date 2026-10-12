@@ -1,5 +1,5 @@
 //
-//  PlayerListViewModel.swift
+//  OpponentListViewModel.swift
 //  TicTacToe Client
 //
 //  Created by James Weatherley on 05/10/2026.
@@ -10,9 +10,9 @@ import Observation
 
 @MainActor
 @Observable
-final class PlayerListViewModel {
+final class OpponentListViewModel {
     
-    var players: [Player] = []
+    var opponents: [Player] = []
     var playerSelection : Player.ID? = nil
     
     var newPlayerFirstName = ""
@@ -20,13 +20,9 @@ final class PlayerListViewModel {
     var newPlayerUserName = ""
     var newPlayerPassword = ""
     
-    func fetchPlayers() async throws {
-        players = try await Server.shared.request(url: TicTacToeAPI.player.rawValue, method: .get)
-    }
-    
     func fetchOpponents(playerID: UUID) async {
         do {
-            players = try await Server.shared.request(
+            opponents = try await Server.shared.request(
                 url: TicTacToeAPI.oppenents.rawValue,
                 parameters: [.playerID: playerID.uuidString],
                 method: .get)
@@ -46,7 +42,7 @@ final class PlayerListViewModel {
                 body: playerData,
                 method: .post
             )
-            players.append(newPlayer)
+            opponents.append(newPlayer)
         } catch {
             print("Request failed")
         }

@@ -9,7 +9,8 @@ import SwiftUI
 
 struct MatchListView: View {
     @State private var viewModel: MatchListViewModel
-    
+    @State private var showCreateMatch = false
+
     init(viewModel: MatchListViewModel) {
         self._viewModel = State(initialValue: viewModel)
     }
@@ -28,12 +29,32 @@ struct MatchListView: View {
                 TableColumn("Board", value: \.board)
             }
             .frame(minHeight: 120)
+            
+            Button {
+                showCreateMatch = true
+            } label: {
+                Text("New match")
+            }
         }
         .task {
             do {
                 try await viewModel.fetchMatches()
             } catch {
                 print("Unable to fetch players: \(error)")
+            }
+        }
+        .alert("Create Match", isPresented: $showCreateMatch) {
+            VStack {
+                Button("Create", role: .confirm) {
+                    Task {
+                        do {
+                            try await viewModel.createMatch()
+                        } catch {
+                            print("Failed to create match")
+                        }
+                    }
+                }
+                Button("Cancel", role: .cancel) { }
             }
         }
     }

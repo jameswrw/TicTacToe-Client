@@ -18,4 +18,8 @@ final class MatchListViewModel {
     func fetchMatches() async throws {
         matches = try await Server.shared.request(url: TicTacToeAPI.match.rawValue, method: .get)
     }
+    
+    func createMatch() async throws {
+    }
+
 }
