@@ -30,7 +30,7 @@ final class LoginViewModel {
         do {
             let body = try coder.encode(credentials)
             session.currentPlayer = try await Server.shared.request(
-                url: TicTacToeAPI.login.rawValue,
+                url: TicTacToeAPI.login,
                 body: body,
                 method: .post
             )

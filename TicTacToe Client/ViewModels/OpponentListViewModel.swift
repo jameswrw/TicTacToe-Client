@@ -25,9 +25,10 @@ final class OpponentListViewModel {
     func fetchOpponents(playerID: UUID) async {
         do {
             session.opponents = try await Server.shared.request(
-                url: TicTacToeAPI.oppenents.rawValue,
+                url: TicTacToeAPI.oppenents,
                 parameters: [.playerID: playerID.uuidString],
-                method: .get)
+                method: .get
+            )
         } catch {
             print(error)
         }
@@ -40,7 +41,7 @@ final class OpponentListViewModel {
         
         do {
             let newPlayer: Player = try await Server.shared.request(
-                url: TicTacToeAPI.createPlayer.rawValue,
+                url: TicTacToeAPI.createPlayer,
                 body: playerData,
                 method: .post
             )

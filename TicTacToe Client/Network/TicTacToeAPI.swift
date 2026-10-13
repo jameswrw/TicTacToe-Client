@@ -9,6 +9,8 @@ import Foundation
 
 enum URLParameters: String {
     case playerID = "{playerID}"
+    case player1ID = "{player1ID}"
+    case player2ID = "{player2ID}"
     case matchID = "{matchID}"
 }
 
@@ -26,5 +28,7 @@ enum TicTacToeAPI: String {
     case match = "/match"
     case createMatch = "/match/create"
     case fetchMatch = "/match/{matchID}"
+    case fetchMatchWithPlayer = "/match/featuring/{player1ID}/versus/{player2ID}"
+
 }
 

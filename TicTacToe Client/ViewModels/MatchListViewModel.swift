@@ -21,7 +21,14 @@ final class MatchListViewModel {
     }
     
     func fetchMatches() async throws {
-        matches = try await Server.shared.request(url: TicTacToeAPI.match.rawValue, method: .get)
+        if let player1ID = session.currentPlayer?.id.uuidString,
+           let player2ID = session.opponent?.uuidString {
+            matches = try await Server.shared.request(
+                url: TicTacToeAPI.fetchMatchWithPlayer,
+                parameters: [.player1ID: player1ID, .player2ID: player2ID],
+                method: .get
+            )
+        }
     }
     
     func createMatch() async throws {
@@ -37,7 +44,7 @@ final class MatchListViewModel {
         
         do {
             let newMatch: Match = try await Server.shared.request(
-                url: TicTacToeAPI.createMatch.rawValue,
+                url: TicTacToeAPI.createMatch,
                 body: matchData,
                 method: .post
             )

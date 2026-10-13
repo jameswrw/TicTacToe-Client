@@ -41,13 +41,13 @@ struct Server {
     }
 
     func request<T: Decodable>(
-        url path: String,
+        url path: TicTacToeAPI,
         body: Data? = nil,
         parameters: [URLParameters: String] = [:],
         queryItems: [URLQueryItem]? = nil,
         method: RestMethod
     ) async throws -> T {
-        let request = try makeRequest(path: path, body: body, urlParameters: parameters, queryItems: queryItems, method: method)
+        let request = try makeRequest(path: path.rawValue, body: body, urlParameters: parameters, queryItems: queryItems, method: method)
         
         do {
             let (data, response) = try await session.data(for: request)
