@@ -8,7 +8,13 @@
 import Foundation
 
 struct BoardViewModel {
+    var session: Session
     var board: String
+    
+    init(session: Session, board: String) {
+        self.session = session
+        self.board = board
+    }
     
     func playMove() {
         

@@ -14,13 +14,15 @@ final class MatchListViewModel {
     
     var session: Session
     var matches: [Match] = []
-    var matchSelection : Match.ID? = nil
 
     init(session: Session) {
         self.session = session
     }
     
     func fetchMatches() async throws {
+        matches = []
+        session.match = nil
+        
         if let player1ID = session.currentPlayer?.id.uuidString,
            let player2ID = session.opponent?.uuidString {
             matches = try await Server.shared.request(

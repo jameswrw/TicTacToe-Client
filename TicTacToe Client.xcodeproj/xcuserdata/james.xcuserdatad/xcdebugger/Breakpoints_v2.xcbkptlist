@@ -3,4 +3,52 @@
    uuid = "5E8B2A8E-A346-42FF-BBF7-E2333A5E3170"
    type = "1"
    version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "4D0F4980-448D-45ED-B039-76BDC736DA2B"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "TicTacToe Client/Views/BoardView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "44"
+            endingLineNumber = "44"
+            landmarkName = "tile(row:col:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "4D0F4980-448D-45ED-B039-76BDC736DA2B - 9741fd90c717a5d4"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #2 () -&gt; &lt;&lt;opaque return type of SwiftUI.View.frame(width: Swift.Optional&lt;CoreGraphics.CGFloat&gt;, height: Swift.Optional&lt;CoreGraphics.CGFloat&gt;, alignment: SwiftUI.Alignment) -&gt; some&gt;&gt;.0 in TicTacToe_Client.BoardView.tile(row: Swift.Int, col: Swift.Int) -&gt; some"
+                  moduleName = "TicTacToe Client.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/james/Documents/Code/vapor/TicTacToe%20Client/TicTacToe%20Client/Views/BoardView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "44"
+                  endingLineNumber = "44">
+               </Location>
+               <Location
+                  uuid = "4D0F4980-448D-45ED-B039-76BDC736DA2B - 2bc46f359758cab0"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Swift.MainActor () -&gt; () in TicTacToe_Client.BoardView.tile(row: Swift.Int, col: Swift.Int) -&gt; some"
+                  moduleName = "TicTacToe Client.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/james/Documents/Code/vapor/TicTacToe%20Client/TicTacToe%20Client/Views/BoardView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "44"
+                  endingLineNumber = "44">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
 </Bucket>

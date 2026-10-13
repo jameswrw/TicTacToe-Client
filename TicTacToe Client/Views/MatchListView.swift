@@ -16,7 +16,7 @@ struct MatchListView: View {
             Text("Matches")
                 .font(.largeTitle)
             
-            Table(viewModel.matches, selection: $viewModel.matchSelection) {
+            Table(viewModel.matches, selection: $viewModel.session.match) {
                 TableColumn("Player One", value: \.player1)
                 TableColumn("Player Two", value: \.player2)
                 TableColumn("Winner") { match in
@@ -35,8 +35,6 @@ struct MatchListView: View {
         .padding()
         .onChange(of: viewModel.session.opponent) { _, _ in
             Task {
-                viewModel.matches = []
-                viewModel.matchSelection = nil
                 try? await viewModel.fetchMatches()
             }
         }

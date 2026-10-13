@@ -15,7 +15,7 @@ struct ContentView: View {
         LoginViewModel(session: session)
     }
     var boardViewModel: BoardViewModel {
-        BoardViewModel(board: "..XOO..XX")
+        BoardViewModel(session: session, board: "..XOO..XX")
     }
 
     var body: some View {

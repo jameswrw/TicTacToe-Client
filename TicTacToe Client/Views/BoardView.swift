@@ -32,6 +32,11 @@ struct BoardView: View {
             }
         }
         .padding()
+        .onChange(of: viewModel.session.opponent) { _, _ in
+            if viewModel.session.opponent == nil {
+                viewModel.session.match = nil
+            }
+        }
     }
     
     func tile(row: Int, col: Int) -> some View {
@@ -54,5 +59,6 @@ struct BoardView: View {
 }
 
 #Preview {
-    BoardView(viewModel: BoardViewModel(board: "OXOXXOX.."))
+    @Previewable @Environment(Session.self) var session
+    BoardView(viewModel: BoardViewModel(session: session, board: "OXOXXOX.."))
 }
