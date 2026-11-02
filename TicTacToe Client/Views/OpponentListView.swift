@@ -16,7 +16,19 @@ struct OpponentListView: View {
             Text("Opponents")
                 .font(.largeTitle)
             
-            Table(viewModel.session.opponents, selection: $viewModel.session.opponent) {
+            // Bridge selection between Player? and Table's UUID? selection
+            let selectionBinding = Binding<UUID?>(
+                get: { viewModel.session.opponent?.id },
+                set: { newID in
+                    if let id = newID {
+                        viewModel.session.opponent = viewModel.session.opponents.first { $0.id == id }
+                    } else {
+                        viewModel.session.opponent = nil
+                    }
+                }
+            )
+            
+            Table(viewModel.session.opponents, selection: selectionBinding) {
                 TableColumn("First Name", value: \.firstName)
                 TableColumn("Last Name", value: \.lastName)
             }
@@ -61,3 +73,4 @@ struct OpponentListView: View {
     @Previewable @Environment(Session.self) var session
     OpponentListView(viewModel: OpponentListViewModel(session: session))
 }
+

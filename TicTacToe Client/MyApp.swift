@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftData
 
 @main struct MyApp: App {
     @State private var session = Session()
@@ -7,5 +8,6 @@ import SwiftUI
             ContentView(session: session)
                 .environment(session)
         }
+        .modelContainer(for: [Player.self, Match.self, Session.self])
     }
 }

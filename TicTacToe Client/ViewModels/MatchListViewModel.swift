@@ -20,40 +20,26 @@ final class MatchListViewModel {
     }
     
     func fetchMatches() async throws {
-        matches = []
+
         session.match = nil
-        
-        if let player1ID = session.currentPlayer?.id.uuidString,
-           let player2ID = session.opponent?.uuidString {
-            matches = try await Server.shared.request(
-                url: TicTacToeAPI.fetchMatchWithPlayer,
-                parameters: [.player1ID: player1ID, .player2ID: player2ID],
-                method: .get
-            )
+
+        guard let player1 = session.currentPlayer, let player2 = session.opponent else {
+            matches = []
+            return
         }
+
+        matches = try await Server.shared.fetchMatches(player1: player1, player2: player2)
     }
     
     func createMatch() async throws {
         
-        guard let player1 = session.currentPlayer?.id,
+        guard let player1 = session.currentPlayer,
               let player2 = session.opponent else {
             return
         }
         
-        let coder = JSONEncoder()
-        let matchDetails = MatchDetails(player1: player1, player2: player2)
-        let matchData = try coder.encode(matchDetails)
-        
-        do {
-            let newMatch: Match = try await Server.shared.request(
-                url: TicTacToeAPI.createMatch,
-                body: matchData,
-                method: .post
-            )
-            matches.append(newMatch)
-        } catch {
-            print("Request failed")
-        }
+        let newMatch = try await Server.shared.createMatch(player1: player1, player2: player2)
+        matches.append(newMatch)
     }
 
 }

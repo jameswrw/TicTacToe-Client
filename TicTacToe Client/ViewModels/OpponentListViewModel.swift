@@ -24,27 +24,17 @@ final class OpponentListViewModel {
     
     func fetchOpponents(playerID: UUID) async {
         do {
-            session.opponents = try await Server.shared.request(
-                url: TicTacToeAPI.oppenents,
-                parameters: [.playerID: playerID.uuidString],
-                method: .get
-            )
+            session.opponents = try await Server.shared.fetchOpponents(playerID: playerID)
         } catch {
             print(error)
         }
     }
     
     func createPlayer(firstName: String, lastName: String, userName: String, password: String) async throws {
-        let coder = JSONEncoder()
-        let player = CreatePlayer(firstName: firstName, lastName: lastName, userName: userName, password: password)
-        let playerData = try coder.encode(player)
+        let playerConfig = CreatePlayerDTO(firstName: firstName, lastName: lastName, userName: userName, password: password)
         
         do {
-            let newPlayer: Player = try await Server.shared.request(
-                url: TicTacToeAPI.createPlayer,
-                body: playerData,
-                method: .post
-            )
+            let newPlayer: Player = try await Server.shared.createPlayer(config: playerConfig)
             session.opponents.append(newPlayer)
         } catch {
             print("Request failed")

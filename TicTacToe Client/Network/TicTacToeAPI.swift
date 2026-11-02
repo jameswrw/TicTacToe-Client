@@ -20,7 +20,7 @@ enum QueryParameters: String {
 }
 
 enum TicTacToeAPI: String {
-    case baseURL = "http://localhost:8080"
+    case baseURL = "http://proxyman.debug:8080"
     case login = "/player/login"
     case player = "/player"
     case createPlayer = "/player/create"

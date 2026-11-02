@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct MatchListView: View {
     @Bindable var viewModel: MatchListViewModel
@@ -13,16 +14,17 @@ struct MatchListView: View {
 
     var body: some View {
         VStack {
-            Text("Matches")
-                .font(.largeTitle)
-            
-            Table(viewModel.matches, selection: $viewModel.session.match) {
-                TableColumn("Player One", value: \.player1)
-                TableColumn("Player Two", value: \.player2)
-                TableColumn("Winner") { match in
-                    Text(match.winnner ?? "—")
+
+            Table(viewModel.matches) {
+                TableColumn("Player 1") { match in
+                    Text(match.player1.name)
                 }
-                TableColumn("Board", value: \.board)
+                TableColumn("Player 2") { match in
+                    Text(match.player2.name)
+                }
+                TableColumn("Winner") { match in
+                    Text(match.winner?.name ?? "—")
+                }
             }
             .frame(minHeight: 120)
             
@@ -35,7 +37,11 @@ struct MatchListView: View {
         .padding()
         .onChange(of: viewModel.session.opponent) { _, _ in
             Task {
-                try? await viewModel.fetchMatches()
+                do {
+                    try await viewModel.fetchMatches()
+                } catch {
+                    print("Unable to fetch matches: \(error)")
+                }
             }
         }
         .task {
@@ -64,5 +70,7 @@ struct MatchListView: View {
 
 #Preview {
     @Previewable @Environment(Session.self) var session
+    let container = try! ModelContainer(for: Session.self, Player.self, Match.self)
+    let context = ModelContext(container)
     MatchListView(viewModel: MatchListViewModel(session: session))
 }

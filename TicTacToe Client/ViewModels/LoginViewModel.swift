@@ -25,15 +25,10 @@ final class LoginViewModel {
         }
         
         let credentials = Credentials(userName: userName, password: password)
-        let coder = JSONEncoder()
         
         do {
-            let body = try coder.encode(credentials)
-            session.currentPlayer = try await Server.shared.request(
-                url: TicTacToeAPI.login,
-                body: body,
-                method: .post
-            )
+            let player = try await Server.shared.login(credentials: credentials)
+            session.currentPlayer = player
         } catch {
             session.currentPlayer = nil
         }
