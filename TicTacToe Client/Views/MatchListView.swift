@@ -16,7 +16,19 @@ struct MatchListView: View {
     var body: some View {
         VStack {
 
-            Table(viewModel.matches) {
+            // Bridge selection between Match? and Table's UUID? selection
+            let selectionBinding = Binding<UUID?>(
+                get: { viewModel.session.match?.id },
+                set: { newID in
+                    if let id = newID {
+                        viewModel.session.match = viewModel.matches.first { $0.id == id }
+                    } else {
+                        viewModel.session.match = nil
+                    }
+                }
+            )
+            
+            Table(viewModel.matches, selection: selectionBinding) {
                 TableColumn("Player 1") { match in
                     Text(match.player1.name)
                 }
