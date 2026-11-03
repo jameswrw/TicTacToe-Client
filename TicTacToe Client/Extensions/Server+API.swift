@@ -41,17 +41,17 @@ extension Server {
         return opponents.map { Player(from: $0) }
     }
     
-    func fetchMatches(player1: Player, player2: Player) async throws -> [Match] {
+    func fetchMatches(player1: Player, player2: Player, context: ModelContext) async throws -> [Match] {
         
         let matches: [MatchDTO] = try await Server.shared.request(
             url: TicTacToeAPI.fetchMatchWithPlayer,
             parameters: [.player1ID: player1.id.uuidString, .player2ID: player2.id.uuidString],
             method: .get
         )
-        return matches.map { Match(from: $0) }
+        return try matches.map { try Match(from: $0, usingContext: context) }
     }
     
-    func createMatch(player1: Player, player2: Player) async throws -> Match {
+    func createMatch(player1: Player, player2: Player, context: ModelContext) async throws -> Match {
         let coder = JSONEncoder()
         let matchDetails = MatchDetailsDTO(player1: player1.id, player2: player2.id)
         let matchData = try coder.encode(matchDetails)
@@ -61,6 +61,6 @@ extension Server {
             body: matchData,
             method: .post
         )
-        return Match(from: newMatch)
+        return try Match(from: newMatch, usingContext: context)
     }
 }

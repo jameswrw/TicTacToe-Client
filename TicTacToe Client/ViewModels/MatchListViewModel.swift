@@ -7,6 +7,7 @@
 
 import Foundation
 import Observation
+import SwiftData
 
 @MainActor
 @Observable
@@ -19,7 +20,7 @@ final class MatchListViewModel {
         self.session = session
     }
     
-    func fetchMatches() async throws {
+    func fetchMatches(usingContext context: ModelContext) async throws {
 
         session.match = nil
 
@@ -28,18 +29,19 @@ final class MatchListViewModel {
             return
         }
 
-        matches = try await Server.shared.fetchMatches(player1: player1, player2: player2)
+        matches = try await Server.shared.fetchMatches(player1: player1, player2: player2, context: context)
     }
     
-    func createMatch() async throws {
+    func createMatch(withContext context: ModelContext) async throws -> Match? {
         
         guard let player1 = session.currentPlayer,
               let player2 = session.opponent else {
-            return
+            return nil
         }
         
-        let newMatch = try await Server.shared.createMatch(player1: player1, player2: player2)
+        let newMatch = try await Server.shared.createMatch(player1: player1, player2: player2, context: context)
         matches.append(newMatch)
+        return newMatch
     }
 
 }

@@ -6,11 +6,13 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct OpponentListView: View {
     @Bindable var viewModel: OpponentListViewModel
     @State private var showCreatePlayer = false
-    
+    @Environment(\.modelContext) private var context
+
     var body: some View {
         VStack {
             Text("Opponents")

@@ -6,11 +6,14 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct LoginView: View {
     
     @Environment(Session.self) var session
+    @Environment(\.modelContext) private var context
     @State private var viewModel: LoginViewModel
+    
     var opponentListViewModel: OpponentListViewModel
         
     init(viewModel: LoginViewModel, playerViewModel: OpponentListViewModel) {
@@ -28,7 +31,9 @@ struct LoginView: View {
                 Task {
                     await viewModel.login()
                     if let player = session.currentPlayer {
+                        context.insert(player)
                         await opponentListViewModel.fetchOpponents(playerID: player.id)
+                        viewModel.session.opponents.forEach { context.insert($0) }
                     }
                 }
             } label: {

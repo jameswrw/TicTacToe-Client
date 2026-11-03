@@ -9,8 +9,8 @@ import Foundation
 
 struct MatchDTO: Codable {
     let id: UUID
-    let player1: PlayerDTO
-    let player2: PlayerDTO
-    let winner: PlayerDTO?
+    let player1: UUID
+    let player2: UUID
+    let winner: UUID?
     let board: String
 }
