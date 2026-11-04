@@ -1,0 +1,7 @@
+# Ignore all Xcode user data
+**/*.xcuserdatad/
+**/xcuserdata/
+
+# Also ignore user-specific schemes and breakpoints (inside user data)
+**/*.xcscmblueprint
+**/*.xcuserstate

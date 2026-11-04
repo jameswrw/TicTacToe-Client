@@ -40,8 +40,8 @@ struct ContentView: View {
                     EmptyView()
                 }
             }, detail: {
-                if session.match != nil {
-                    BoardView(viewModel: boardViewModel)
+                if let match = session.match {
+                    BoardView(viewModel: .init(session: session, board: match.board))
                 } else {
                     EmptyView()
                 }

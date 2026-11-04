@@ -15,20 +15,13 @@ struct BoardView: View {
     }
     
     var body: some View {
-        VStack {
-            Text("Match")
-                .font(.largeTitle)
-            row(0)
-            row(1)
-            row(2)
-        }
-        .padding()
+        grid()
 
         HStack {
             Button {
                 viewModel.playMove()
             } label: {
-                Text("Make move")
+                Text("Play move")
             }
         }
         .padding()
@@ -39,14 +32,15 @@ struct BoardView: View {
         }
     }
     
-    func tile(row: Int, col: Int) -> some View {
-        Button {
-            viewModel.toggleTile()
-        } label: {
-            Text(viewModel.tileValue(row: row, col: col))
+    func grid() -> some View {
+        VStack {
+            Text("Match")
                 .font(.largeTitle)
-                .frame(width: 50, height: 50)
+            row(0)
+            row(1)
+            row(2)
         }
+        .padding()
     }
     
     func row(_ row: Int) -> some View {
@@ -55,6 +49,22 @@ struct BoardView: View {
             tile(row: row, col: 1)
             tile(row: row, col: 2)
         }
+    }
+    
+    func tile(row: Int, col: Int) -> some View {
+        Button {
+            viewModel.toggleTile(row: row, col: col)
+        } label: {
+            var symbol = viewModel.tileValue(row: row, col: col)
+            if viewModel.isCandidateMove(row: row, col: col) {
+                symbol = viewModel.candidateMove?.symbol ?? .empty
+            }
+            
+            return Text(symbol.rawValue)
+                .font(.largeTitle)
+                .frame(width: 50, height: 50)
+        }
+        .background(viewModel.tileBackground(row: row, col: col))
     }
 }
 

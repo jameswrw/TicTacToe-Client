@@ -16,6 +16,18 @@ final class MatchListViewModel {
     var session: Session
     var matches: [Match] = []
 
+    // Bridge selection between Table's UUID? and the selected Match stored in Session
+    var selectedMatchID: UUID? {
+        get { session.match?.id }
+        set {
+            if let id = newValue {
+                session.match = matches.first { $0.id == id }
+            } else {
+                session.match = nil
+            }
+        }
+    }
+
     init(session: Session) {
         self.session = session
     }
