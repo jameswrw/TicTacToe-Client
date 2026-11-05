@@ -32,13 +32,13 @@ struct LoginView: View {
                     await viewModel.login()
                     if let player = session.currentPlayer {
                         context.insert(player)
-                        await opponentListViewModel.fetchOpponents(playerID: player.id)
-                        viewModel.session.opponents.forEach { context.insert($0) }
+                        await opponentListViewModel.fetchOpponents(playerID: player.id, context: context)
                     }
                 }
             } label: {
                 Text("Login")
             }
+            .disabled(viewModel.userName.count == 0 || viewModel.password.count == 0)
         }
         .padding()
     }

@@ -7,6 +7,7 @@
 
 import Foundation
 import Observation
+import SwiftData
 
 @MainActor
 @Observable
@@ -22,9 +23,21 @@ final class OpponentListViewModel {
         self.session = session
     }
     
-    func fetchOpponents(playerID: UUID) async {
+    func fetchOpponents(playerID: UUID, context: ModelContext) async {
         do {
             session.opponents = try await Server.shared.fetchOpponents(playerID: playerID)
+            
+            for opponent in session.opponents {
+                let targetID = opponent.id
+                let fd = FetchDescriptor<Player>(predicate: #Predicate { $0.id == targetID })
+                if let _ = try? context.fetch(fd).first {
+                    // Optionally update fields if they changed
+                    // existing?.firstName = opponent.firstName
+                    // existing?.lastName = opponent.lastName
+                } else {
+                    context.insert(opponent)
+                }
+            }
         } catch {
             print(error)
         }

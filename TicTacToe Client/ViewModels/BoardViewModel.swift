@@ -7,8 +7,9 @@
 
 import Foundation
 import SwiftUI
+import SwiftData
 
-enum BoardSymbol: String {
+enum BoardSymbol: String, Codable {
     case cross = "❌"
     case nought = "⭕️"
     case empty = "."
@@ -16,32 +17,49 @@ enum BoardSymbol: String {
 
 struct BoardViewModel {
     
-    struct CandidateMove: Equatable {
-        let row: Int
-        let col: Int
-        let symbol: BoardSymbol
-    }
-    
     var session: Session
     var board: String
-    var candidateMove: CandidateMove?
-    var currentMove: BoardSymbol = .cross
+    var candidateMove: Move?
+    var currentMove: BoardSymbol {
+        let xs = board
+            .filter { $0 == "X" }
+            .count
+        let os = board
+            .filter { $0 == "O" }
+            .count
+        return xs <= os ? .cross : .nought
+    }
     
     init(session: Session, board: String) {
         self.session = session
         self.board = board
     }
     
-    mutating func playMove() {
-        guard candidateMove != nil else {
+    func playMove(context: ModelContext) async throws {
+        guard let candidateMove,
+              var match = session.match,
+              let currentPlayer = session.currentPlayer
+        else {
             return
         }
         
-        if currentMove == .cross {
-            currentMove = .nought
-        } else if currentMove == .nought {
-            currentMove = .cross
+        match = try await Server.shared.playMove(
+            match: match,
+            player: currentPlayer,
+            move: candidateMove,
+            context: context
+        )
+        
+        // Before try context.save()
+        let fetch = FetchDescriptor<Player>()
+        if let players = try? context.fetch(fetch) {
+            for p in players {
+                print("Player in context:", p.id, p.firstName, p.lastName)
+            }
         }
+        
+        session.match = match
+        try context.save()
     }
     
     mutating func toggleTile(row: Int, col: Int) {

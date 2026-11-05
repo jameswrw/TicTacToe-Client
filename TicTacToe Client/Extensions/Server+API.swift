@@ -32,6 +32,25 @@ extension Server {
         return Player(from: newPlayer)
     }
     
+    func playMove(
+        match: Match,
+        player: Player,
+        move: Move,
+        context: ModelContext
+    ) async throws -> Match {
+        let moveDTO = MoveDTO(player: player, move: move)
+        let coder = JSONEncoder()
+        let moveData = try coder.encode(moveDTO)
+        
+        let matchDTO: MatchDTO = try await Server.shared.request(
+            url: TicTacToeAPI.playMove,
+            body: moveData,
+            parameters: [.matchID: match.id.uuidString],
+            method: .post
+        )
+        return try Match(from: matchDTO, usingContext: context)
+    }
+    
     func fetchOpponents(playerID: UUID) async throws -> [Player] {
         let opponents: [PlayerDTO] = try await Server.shared.request(
             url: TicTacToeAPI.oppenents,

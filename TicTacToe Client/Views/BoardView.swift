@@ -6,23 +6,28 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct BoardView: View {
     @State var viewModel: BoardViewModel
-    
-    init(viewModel: BoardViewModel) {
-        self._viewModel = State(initialValue: viewModel)
-    }
-    
+    @Environment(\.modelContext) private var context
+
     var body: some View {
         grid()
 
         HStack {
             Button {
-                viewModel.playMove()
+                Task {
+                    do {
+                        try await viewModel.playMove(context: context)
+                    } catch {
+                        print("Failed to play move")
+                    }
+                }
             } label: {
                 Text("Play move")
             }
+            .disabled(viewModel.candidateMove == nil)
         }
         .padding()
         .onChange(of: viewModel.session.opponent) { _, _ in

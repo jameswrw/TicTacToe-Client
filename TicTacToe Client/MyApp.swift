@@ -8,6 +8,6 @@ import SwiftData
             ContentView(session: session)
                 .environment(session)
         }
-        .modelContainer(for: [Player.self, Match.self, Session.self])
+        .modelContainer(for: [Player.self, Match.self])
     }
 }
