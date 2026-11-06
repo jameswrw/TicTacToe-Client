@@ -13,6 +13,10 @@ struct BoardView: View {
     @Environment(\.modelContext) private var context
 
     var body: some View {
+        Text("Match")
+            .font(.largeTitle)
+        Text(viewModel.moveText())
+        
         grid()
 
         HStack {
@@ -39,8 +43,6 @@ struct BoardView: View {
     
     func grid() -> some View {
         VStack {
-            Text("Match")
-                .font(.largeTitle)
             row(0)
             row(1)
             row(2)

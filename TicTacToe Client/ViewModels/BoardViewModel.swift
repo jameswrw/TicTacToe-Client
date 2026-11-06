@@ -100,4 +100,42 @@ struct BoardViewModel {
     func tileBackground(row: Int, col: Int) -> Color {
         isCandidateMove(row: row, col: col) ? .green.opacity(0.15) : Color(red: 0.8, green: 0.8, blue: 0.8)
     }
+    
+    func moveText() -> String {
+        guard let match = session.match else {
+            return "Error"
+        }
+        
+        if match.winner != nil {
+            return winText(match: match)
+        } else {
+            return playerMoveText(match: match)
+        }
+    }
+    
+    private func winText(match: Match) -> String {
+        guard let winner = match.winner else {
+            return "Error"
+        }
+        
+        return winner == session.currentPlayer ? "You won" : "They won"
+    }
+    
+    private func playerMoveText(match: Match) -> String {
+        
+        let isPlayerOne = match.player1 == session.currentPlayer
+        
+        let xs = match.board
+            .filter { String($0) == BoardSymbol.cross.rawValue }
+            .count
+        let os = match.board
+            .filter { String($0) == BoardSymbol.nought.rawValue }
+            .count
+        
+        var isPlayerMove = false
+        if (isPlayerOne && (xs < os)) || (!isPlayerOne && (xs == os)) {
+            isPlayerMove = true
+        }
+        return isPlayerMove ? "Your move" : "Their move"
+    }
 }
