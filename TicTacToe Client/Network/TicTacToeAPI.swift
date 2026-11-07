@@ -22,12 +22,9 @@ enum QueryParameters: String {
 enum TicTacToeAPI: String {
     case baseURL = "http://proxyman.debug:8080"
     case login = "/player/login"
-    case player = "/player"
     case createPlayer = "/player/create"
     case oppenents = "/player/{playerID}/opponents"
-    case match = "/match"
     case createMatch = "/match/create"
-    case fetchMatch = "/match/{matchID}"
     case playMove = "/match/{matchID}/play"
     case fetchMatchWithPlayer = "/match/featuring/{player1ID}/versus/{player2ID}"
 
