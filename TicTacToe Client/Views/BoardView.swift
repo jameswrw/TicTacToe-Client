@@ -11,7 +11,8 @@ import SwiftData
 struct BoardView: View {
     @State var viewModel: BoardViewModel
     @Environment(\.modelContext) private var context
-
+    @Environment(Server.self) private var server
+    
     var body: some View {
         Text("Match")
             .font(.largeTitle)
@@ -23,7 +24,7 @@ struct BoardView: View {
             Button {
                 Task {
                     do {
-                        try await viewModel.playMove(context: context)
+                        try await viewModel.playMove(context: context, server: server)
                     } catch {
                         print("Failed to play move")
                     }

@@ -12,7 +12,8 @@ struct MatchListView: View {
     @Bindable var viewModel: MatchListViewModel
     @State private var showCreateMatch = false
     @Environment(\.modelContext) private var context
-
+    @Environment(Server.self) private var server
+    
     var body: some View {
         VStack {
 
@@ -39,7 +40,7 @@ struct MatchListView: View {
         .onChange(of: viewModel.session.opponent) { _, _ in
             Task {
                 do {
-                    try await viewModel.fetchMatches(usingContext: context)
+                    try await viewModel.fetchMatches(usingContext: context, server: server)
                     viewModel.matches.forEach { context.insert($0) }
                 } catch {
                     print("Unable to fetch matches: \(error)")
@@ -48,7 +49,7 @@ struct MatchListView: View {
         }
         .task {
             do {
-                try await viewModel.fetchMatches(usingContext: context)
+                try await viewModel.fetchMatches(usingContext: context, server: server)
             } catch {
                 print("Unable to fetch players: \(error)")
             }
@@ -58,7 +59,7 @@ struct MatchListView: View {
                 Button("Create", role: .confirm) {
                     Task {
                         do {
-                            if let match = try await viewModel.createMatch(withContext: context) {
+                            if let match = try await viewModel.createMatch(withContext: context, server: server) {
                                 context.insert(match)
                             }
                         } catch {

@@ -32,7 +32,7 @@ final class MatchListViewModel {
         self.session = session
     }
     
-    func fetchMatches(usingContext context: ModelContext) async throws {
+    func fetchMatches(usingContext context: ModelContext, server: ServerProtocol) async throws {
 
         session.match = nil
 
@@ -41,17 +41,17 @@ final class MatchListViewModel {
             return
         }
 
-        matches = try await Server.shared.fetchMatches(player1: player1, player2: player2, context: context)
+        matches = try await server.fetchMatches(player1: player1, player2: player2, context: context)
     }
     
-    func createMatch(withContext context: ModelContext) async throws -> Match? {
+    func createMatch(withContext context: ModelContext, server: ServerProtocol) async throws -> Match? {
         
         guard let player1 = session.currentPlayer,
               let player2 = session.opponent else {
             return nil
         }
         
-        let newMatch = try await Server.shared.createMatch(player1: player1, player2: player2, context: context)
+        let newMatch = try await server.createMatch(player1: player1, player2: player2, context: context)
         matches.append(newMatch)
         return newMatch
     }

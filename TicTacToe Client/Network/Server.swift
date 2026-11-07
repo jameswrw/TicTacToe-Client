@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftData
 
 enum RestMethod: String {
     case get = "GET"
@@ -15,39 +16,31 @@ enum RestMethod: String {
     case delete = "DELETE"
 }
 
-struct Server {
-    let baseURL: URL
-    let session: URLSession
+@MainActor
+class Server: ServerProtocol, Observable {
+    var baseURL: URL
+    let session: URLSession = .shared
     var accessToken: String? = nil
     
-    private static var _shared: Server = Server()
-    static var shared: Server { _shared }
-
-    static func configure(baseURL: URL, session: URLSession = .shared) {
-        _shared = Server(baseURL: baseURL, session: session)
+    init(baseURL: URL, accessToken: String? = nil) {
+        self.baseURL = baseURL
+        self.accessToken = accessToken
     }
     
-    static func setAccessToken(_ token: String?) async {
-        _shared.accessToken = token
-    }
-
-    init(
-        // baseURL should be set to something sensible in appDelegate didFinishLaunchingWithOptions.
-        baseURL: URL = URL(string: TicTacToeAPI.baseURL.rawValue)!,
-        session: URLSession = .shared
-    ) {
-        self.baseURL = baseURL
-        self.session = session
-    }
-
-    func request<T: Decodable>(
+     func request<T: Decodable>(
         url path: TicTacToeAPI,
         body: Data? = nil,
         parameters: [URLParameters: String] = [:],
         queryItems: [URLQueryItem]? = nil,
         method: RestMethod
     ) async throws -> T {
-        let request = try makeRequest(path: path.rawValue, body: body, urlParameters: parameters, queryItems: queryItems, method: method)
+        let request = try makeRequest(
+            path: path.rawValue,
+            body: body,
+            urlParameters: parameters,
+            queryItems: queryItems,
+            method: method
+        )
         
         do {
             let (data, response) = try await session.data(for: request)
@@ -96,19 +89,94 @@ struct Server {
         let normalizedPath = mutablePath.hasPrefix("/") ? String(mutablePath.dropFirst()) : mutablePath
         components?.path = normalizedExisting.isEmpty ? "/\(normalizedPath)" : "\(normalizedExisting)/\(normalizedPath)"
         components?.queryItems = queryItems
-
+        
         guard let url = components?.url else {
             throw APIError.invalidURL
         }
-
         let token = accessToken ?? ""
+        
         var request = URLRequest(url: url)
         request.httpMethod = method.rawValue
         request.httpBody = body
         request.setValue("application/json", forHTTPHeaderField: "Accept")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-
+        
         return request
     }
 }
+ 
+extension Server {
+    func login(credentials: Credentials) async throws -> Player {
+        let coder = JSONEncoder()
+        let body = try coder.encode(credentials)
+        let playerDTO: PlayerDTO = try await request(
+            url: TicTacToeAPI.login,
+            body: body,
+            method: .post
+        )
+        return Player(from: playerDTO)
+    }
+    
+    func createPlayer(config: CreatePlayerDTO) async throws -> Player {
+        let coder = JSONEncoder()
+        let playerData = try coder.encode(config)
+        let newPlayer: PlayerDTO = try await request(
+            url: TicTacToeAPI.createPlayer,
+            body: playerData,
+            method: .post
+        )
+        return Player(from: newPlayer)
+    }
+    
+    func playMove(
+        match: Match,
+        player: Player,
+        move: Move,
+        context: ModelContext
+    ) async throws -> Match {
+        let moveDTO = MoveDTO(player: player, move: move)
+        let coder = JSONEncoder()
+        let moveData = try coder.encode(moveDTO)
+        
+        let matchDTO: MatchDTO = try await request(
+            url: TicTacToeAPI.playMove,
+            body: moveData,
+            parameters: [.matchID: match.id.uuidString],
+            method: .post
+        )
+        return try Match(from: matchDTO, usingContext: context)
+    }
+    
+    func fetchOpponents(playerID: UUID) async throws -> [Player] {
+        let opponents: [PlayerDTO] = try await request(
+            url: TicTacToeAPI.oppenents,
+            parameters: [.playerID: playerID.uuidString],
+            method: .get
+        )
+        return opponents.map { Player(from: $0) }
+    }
+    
+    func fetchMatches(player1: Player, player2: Player, context: ModelContext) async throws -> [Match] {
+        let matches: [MatchDTO] = try await request(
+            url: TicTacToeAPI.fetchMatchWithPlayer,
+            parameters: [.player1ID: player1.id.uuidString, .player2ID: player2.id.uuidString],
+            method: .get
+        )
+        return try matches.map { try Match(from: $0, usingContext: context) }
+    }
+    
+    func createMatch(player1: Player, player2: Player, context: ModelContext) async throws -> Match {
+        let coder = JSONEncoder()
+        let matchDetails = MatchDetailsDTO(player1: player1.id, player2: player2.id)
+        let matchData = try coder.encode(matchDetails)
+        
+        let newMatch: MatchDTO = try await request(
+            url: TicTacToeAPI.createMatch,
+            body: matchData,
+            method: .post
+        )
+        return try Match(from: newMatch, usingContext: context)
+    }
+}
+

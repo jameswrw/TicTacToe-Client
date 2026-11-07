@@ -35,7 +35,7 @@ struct BoardViewModel {
         self.board = board
     }
     
-    func playMove(context: ModelContext) async throws {
+    func playMove(context: ModelContext, server: ServerProtocol) async throws {
         guard let candidateMove,
               var match = session.match,
               let currentPlayer = session.currentPlayer
@@ -43,7 +43,7 @@ struct BoardViewModel {
             return
         }
         
-        match = try await Server.shared.playMove(
+        match = try await server.playMove(
             match: match,
             player: currentPlayer,
             move: candidateMove,

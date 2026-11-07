@@ -12,6 +12,7 @@ struct LoginView: View {
     
     @Environment(Session.self) var session
     @Environment(\.modelContext) private var context
+    @Environment(Server.self) private var server
     @State private var viewModel: LoginViewModel
     
     var opponentListViewModel: OpponentListViewModel
@@ -29,10 +30,10 @@ struct LoginView: View {
             SecureField("Password", text: $viewModel.password)
             Button {
                 Task {
-                    await viewModel.login()
+                    await viewModel.login(server: server)
                     if let player = session.currentPlayer {
                         context.insert(player)
-                        await opponentListViewModel.fetchOpponents(playerID: player.id, context: context)
+                        await opponentListViewModel.fetchOpponents(playerID: player.id, context: context, server: server)
                     }
                 }
             } label: {

@@ -23,9 +23,9 @@ final class OpponentListViewModel {
         self.session = session
     }
     
-    func fetchOpponents(playerID: UUID, context: ModelContext) async {
+    func fetchOpponents(playerID: UUID, context: ModelContext, server: ServerProtocol) async {
         do {
-            session.opponents = try await Server.shared.fetchOpponents(playerID: playerID)
+            session.opponents = try await server.fetchOpponents(playerID: playerID)
             
             for opponent in session.opponents {
                 let targetID = opponent.id
@@ -43,11 +43,11 @@ final class OpponentListViewModel {
         }
     }
     
-    func createPlayer(firstName: String, lastName: String, userName: String, password: String) async throws {
+    func createPlayer(firstName: String, lastName: String, userName: String, password: String, server: ServerProtocol) async throws {
         let playerConfig = CreatePlayerDTO(firstName: firstName, lastName: lastName, userName: userName, password: password)
         
         do {
-            let newPlayer: Player = try await Server.shared.createPlayer(config: playerConfig)
+            let newPlayer: Player = try await server.createPlayer(config: playerConfig)
             session.opponents.append(newPlayer)
         } catch {
             print("Request failed")

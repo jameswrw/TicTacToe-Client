@@ -12,6 +12,7 @@ struct OpponentListView: View {
     @Bindable var viewModel: OpponentListViewModel
     @State private var showCreatePlayer = false
     @Environment(\.modelContext) private var context
+    @Environment(Server.self) private var server
 
     var body: some View {
         VStack {
@@ -57,7 +58,8 @@ struct OpponentListView: View {
                                 firstName: viewModel.newPlayerFirstName,
                                 lastName: viewModel.newPlayerLastName,
                                 userName: viewModel.newPlayerUserName,
-                                password: viewModel.newPlayerPassword
+                                password: viewModel.newPlayerPassword,
+                                server: server
                             )
                         } catch {
                             print("Failed to create player")

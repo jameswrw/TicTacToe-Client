@@ -18,7 +18,7 @@ final class LoginViewModel {
         self.session = session
     }
 
-    func login() async {
+    func login(server: ServerProtocol) async {
         guard userName.count > 0, password.count > 0 else {
             session.currentPlayer = nil
             return
@@ -27,7 +27,7 @@ final class LoginViewModel {
         let credentials = Credentials(userName: userName, password: password)
         
         do {
-            let player = try await Server.shared.login(credentials: credentials)
+            let player = try await server.login(credentials: credentials)
             session.currentPlayer = player
         } catch {
             session.currentPlayer = nil
