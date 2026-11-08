@@ -4,9 +4,8 @@
 // Provides global access to the currently logged-in player
 
 import Foundation
-import SwiftData
 
-@Model
+@Observable
 final class Session {
     // Current logged-in player
     var currentPlayer: Player?

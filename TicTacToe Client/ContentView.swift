@@ -15,7 +15,7 @@ struct ContentView: View {
         LoginViewModel(session: session)
     }
     var boardViewModel: BoardViewModel {
-        BoardViewModel(session: session, board: "..XOO..XX")
+        BoardViewModel(session: session)
     }
 
     var body: some View {
@@ -40,8 +40,8 @@ struct ContentView: View {
                     EmptyView()
                 }
             }, detail: {
-                if let match = session.match {
-                    BoardView(viewModel: .init(session: session, board: match.board))
+                if let _ = session.match {
+                    BoardView(viewModel: .init(session: session))
                 } else {
                     EmptyView()
                 }
@@ -52,6 +52,7 @@ struct ContentView: View {
 
 #Preview {
     @Previewable @Environment(Session.self) var session
+//    session.match?.board = "O.O.X..X."
     ContentView(session: session)
 }
 

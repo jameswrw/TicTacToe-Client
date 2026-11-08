@@ -9,16 +9,25 @@ import Foundation
 import SwiftUI
 import SwiftData
 
+//enum BoardSymbol: String, Codable {
+//    case cross = "❌"
+//    case nought = "⭕️"
+//    case empty = "."
+//}
+
 enum BoardSymbol: String, Codable {
-    case cross = "❌"
-    case nought = "⭕️"
+    case cross = "X"
+    case nought = "O"
     case empty = "."
 }
 
-struct BoardViewModel {
+@Observable
+class BoardViewModel {
     
     var session: Session
-    var board: String
+    var board: String {
+        session.match?.board ?? "........."
+    }
     var candidateMove: Move?
     var currentMove: BoardSymbol {
         let xs = board
@@ -30,9 +39,8 @@ struct BoardViewModel {
         return xs <= os ? .cross : .nought
     }
     
-    init(session: Session, board: String) {
+    init(session: Session) {
         self.session = session
-        self.board = board
     }
     
     func playMove(context: ModelContext, server: ServerProtocol) async throws {
@@ -62,30 +70,34 @@ struct BoardViewModel {
         try context.save()
     }
     
-    mutating func toggleTile(row: Int, col: Int) {
+    func toggleTile(row: Int, col: Int) {
         if let candidateMove,
            candidateMove.row == row && candidateMove.col == col {
             self.candidateMove = nil
         } else {
-            if tileValue(row: row, col: col) == .empty {
+            if tileValue(row: row, col: col) == BoardSymbol.empty.rawValue {
                 candidateMove = .init(row: row, col: col, symbol: currentMove)
             }
         }
     }
     
-    func tileValue(row: Int, col: Int) -> BoardSymbol {
+    func tileValue(row: Int, col: Int) -> String {
         guard (0..<3).contains(row), (0..<3).contains(col) else {
-            return .empty
+            return BoardSymbol.empty.rawValue
         }
         
-        let index = board.index(board.startIndex, offsetBy: row * 3 + col)
-        let moveAtIndex = board[index]
+        let symbol: BoardSymbol
+        if isCandidateMove(row: row, col: col) {
+            symbol = candidateMove?.symbol ?? BoardSymbol.empty
+        } else {
+            let index = board.index(board.startIndex, offsetBy: row * 3 + col)
+            symbol = BoardSymbol(rawValue: String(board[index])) ?? .empty
+        }
         
-        return switch moveAtIndex {
-        case "X": .cross
-        case "O": .nought
-        case ".": .empty
-        default: .empty
+        return switch symbol {
+        case .cross: "❌"
+        case .nought: "⭕️"
+        default: "."
         }
     }
     

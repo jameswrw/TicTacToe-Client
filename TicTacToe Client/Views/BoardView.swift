@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftData
 
 struct BoardView: View {
-    @State var viewModel: BoardViewModel
+    @Bindable var viewModel: BoardViewModel
     @Environment(\.modelContext) private var context
     @Environment(Server.self) private var server
     
@@ -63,20 +63,28 @@ struct BoardView: View {
         Button {
             viewModel.toggleTile(row: row, col: col)
         } label: {
-            var symbol = viewModel.tileValue(row: row, col: col)
-            if viewModel.isCandidateMove(row: row, col: col) {
-                symbol = viewModel.candidateMove?.symbol ?? .empty
-            }
-            
-            return Text(symbol.rawValue)
+            let symbol = viewModel.tileValue(row: row, col: col)
+            return Text(symbol)
                 .font(.largeTitle)
                 .frame(width: 50, height: 50)
         }
         .background(viewModel.tileBackground(row: row, col: col))
+        .disabled(viewModel.session.match?.winner != nil)
     }
 }
 
 #Preview {
-    @Previewable @Environment(Session.self) var session
-    BoardView(viewModel: BoardViewModel(session: session, board: "OXOXXOX.."))
+//    @Previewable @Environment(Session.self) var session
+//    BoardView(viewModel: BoardViewModel(session: session))
+    
+    let player1 = Player(firstName: "Bob", lastName: "Foo")
+    let player2 = Player(firstName: "Fred", lastName: "Bar")
+    
+    let session = Session(
+        currentPlayer: player1,
+        opponents: [],
+        opponent: player2,
+        match: .init(player1: player1, player2: player2, board: "OO.XX.XO.")
+    )
+    BoardView(viewModel: BoardViewModel(session: session))
 }
