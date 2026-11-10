@@ -51,12 +51,12 @@ class BoardViewModel {
             return
         }
         
-        match = try await server.playMove(
+        let dto = try await server.playMove(
             match: match,
             player: currentPlayer,
-            move: candidateMove,
-            context: context
+            move: candidateMove
         )
+        match = try Match(from: dto, usingContext: context)
         
         // Before try context.save()
         let fetch = FetchDescriptor<Player>()

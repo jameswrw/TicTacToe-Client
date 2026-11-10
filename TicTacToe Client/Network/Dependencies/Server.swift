@@ -16,18 +16,18 @@ enum RestMethod: String {
     case delete = "DELETE"
 }
 
-@MainActor
-class Server: ServerProtocol, Observable {
-    var baseURL: URL
+nonisolated final class Server: ServerProtocol, Observable {
+    
+    nonisolated(unsafe) var baseURL: URL
     let session: URLSession = .shared
-    var accessToken: String? = nil
+    nonisolated(unsafe) var accessToken: String? = nil
     
     init(baseURL: URL, accessToken: String? = nil) {
         self.baseURL = baseURL
         self.accessToken = accessToken
     }
     
-     func request<T: Decodable>(
+     private func request<T: Decodable>(
         url path: TicTacToeAPI,
         body: Data? = nil,
         parameters: [URLParameters: String] = [:],
@@ -107,76 +107,69 @@ class Server: ServerProtocol, Observable {
 }
  
 extension Server {
-    func login(credentials: Credentials) async throws -> Player {
+    func login(credentials: Credentials) async throws -> PlayerDTO {
         let coder = JSONEncoder()
         let body = try coder.encode(credentials)
-        let playerDTO: PlayerDTO = try await request(
+        return try await request(
             url: TicTacToeAPI.login,
             body: body,
             method: .post
         )
-        return Player(from: playerDTO)
     }
     
-    func createPlayer(config: CreatePlayerDTO) async throws -> Player {
+    func createPlayer(config: CreatePlayerDTO) async throws -> PlayerDTO {
         let coder = JSONEncoder()
         let playerData = try coder.encode(config)
-        let newPlayer: PlayerDTO = try await request(
+        return try await request(
             url: TicTacToeAPI.createPlayer,
             body: playerData,
             method: .post
         )
-        return Player(from: newPlayer)
     }
     
     func playMove(
         match: Match,
         player: Player,
-        move: Move,
-        context: ModelContext
-    ) async throws -> Match {
+        move: Move
+    ) async throws -> MatchDTO {
         let moveDTO = MoveDTO(player: player, move: move)
         let coder = JSONEncoder()
         let moveData = try coder.encode(moveDTO)
         
-        let matchDTO: MatchDTO = try await request(
+        return try await request(
             url: TicTacToeAPI.playMove,
             body: moveData,
             parameters: [.matchID: match.id.uuidString],
             method: .post
         )
-        return try Match(from: matchDTO, usingContext: context)
     }
     
-    func fetchOpponents(playerID: UUID) async throws -> [Player] {
-        let opponents: [PlayerDTO] = try await request(
+    func fetchOpponents(playerID: UUID) async throws -> [PlayerDTO] {
+        try await request(
             url: TicTacToeAPI.oppenents,
             parameters: [.playerID: playerID.uuidString],
             method: .get
         )
-        return opponents.map { Player(from: $0) }
     }
     
-    func fetchMatches(player1: Player, player2: Player, context: ModelContext) async throws -> [Match] {
-        let matches: [MatchDTO] = try await request(
+    func fetchMatches(player1: Player, player2: Player) async throws -> [MatchDTO] {
+        try await request(
             url: TicTacToeAPI.fetchMatchWithPlayer,
             parameters: [.player1ID: player1.id.uuidString, .player2ID: player2.id.uuidString],
             method: .get
         )
-        return try matches.map { try Match(from: $0, usingContext: context) }
     }
     
-    func createMatch(player1: Player, player2: Player, context: ModelContext) async throws -> Match {
+    func createMatch(player1: Player, player2: Player) async throws -> MatchDTO {
         let coder = JSONEncoder()
         let matchDetails = MatchDetailsDTO(player1: player1.id, player2: player2.id)
         let matchData = try coder.encode(matchDetails)
         
-        let newMatch: MatchDTO = try await request(
+        return try await request(
             url: TicTacToeAPI.createMatch,
             body: matchData,
             method: .post
         )
-        return try Match(from: newMatch, usingContext: context)
     }
 }
 

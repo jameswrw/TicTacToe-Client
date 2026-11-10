@@ -7,8 +7,12 @@
 
 import Foundation
 
-struct PlayerDTO: Codable {
+nonisolated struct PlayerDTO: Codable {
     var id: UUID
     var firstName: String
     var lastName: String
+    
+    static func mock() -> Self {
+        .init(id: UUID(), firstName: "Place", lastName: "Holder")
+    }
 }

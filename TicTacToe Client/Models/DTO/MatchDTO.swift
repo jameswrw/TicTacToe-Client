@@ -7,10 +7,14 @@
 
 import Foundation
 
-struct MatchDTO: Codable {
+nonisolated struct MatchDTO: Codable {
     let id: UUID
     let player1: UUID
     let player2: UUID
     let winner: UUID?
     let board: String
+    
+    static func mock() -> Self {
+        return .init(id: UUID(), player1: UUID(), player2: UUID(), winner: nil, board: ".........")
+    }
 }

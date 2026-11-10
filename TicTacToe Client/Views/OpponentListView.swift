@@ -59,7 +59,8 @@ struct OpponentListView: View {
                                 lastName: viewModel.newPlayerLastName,
                                 userName: viewModel.newPlayerUserName,
                                 password: viewModel.newPlayerPassword,
-                                server: server
+                                server: server,
+                                context: context
                             )
                         } catch {
                             print("Failed to create player")

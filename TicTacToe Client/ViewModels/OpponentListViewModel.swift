@@ -25,7 +25,8 @@ final class OpponentListViewModel {
     
     func fetchOpponents(playerID: UUID, context: ModelContext, server: ServerProtocol) async {
         do {
-            session.opponents = try await server.fetchOpponents(playerID: playerID)
+            let dto = try await server.fetchOpponents(playerID: playerID)
+            session.opponents = dto.map { Player(from: $0) }
             
             for opponent in session.opponents {
                 let targetID = opponent.id
@@ -36,6 +37,7 @@ final class OpponentListViewModel {
                     // existing?.lastName = opponent.lastName
                 } else {
                     context.insert(opponent)
+                    try context.save()
                 }
             }
         } catch {
@@ -43,12 +45,21 @@ final class OpponentListViewModel {
         }
     }
     
-    func createPlayer(firstName: String, lastName: String, userName: String, password: String, server: ServerProtocol) async throws {
+    func createPlayer(
+        firstName: String,
+        lastName: String,
+        userName: String,
+        password: String,
+        server: ServerProtocol,
+        context: ModelContext
+    ) async throws {
         let playerConfig = CreatePlayerDTO(firstName: firstName, lastName: lastName, userName: userName, password: password)
         
         do {
-            let newPlayer: Player = try await server.createPlayer(config: playerConfig)
+           let dto = try await server.createPlayer(config: playerConfig)
+            let newPlayer = Player(from: dto)
             session.opponents.append(newPlayer)
+            try context.save()
         } catch {
             print("Request failed")
         }

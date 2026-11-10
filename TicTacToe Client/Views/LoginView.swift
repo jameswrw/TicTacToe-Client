@@ -30,7 +30,7 @@ struct LoginView: View {
             SecureField("Password", text: $viewModel.password)
             Button {
                 Task {
-                    await viewModel.login(server: server)
+                    await viewModel.login(server: server, context: context)
                     if let player = session.currentPlayer {
                         context.insert(player)
                         await opponentListViewModel.fetchOpponents(playerID: player.id, context: context, server: server)

@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct MatchDetailsDTO: Encodable {
+nonisolated struct MatchDetailsDTO: Encodable {
     let player1: UUID
     let player2: UUID
 }

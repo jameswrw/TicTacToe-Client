@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct MoveDTO: Codable {
+nonisolated struct MoveDTO: Codable {
     let player: UUID
     let row: Int
     let col: Int

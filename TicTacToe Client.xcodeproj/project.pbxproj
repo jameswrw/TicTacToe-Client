@@ -6,6 +6,11 @@
 	objectVersion = 90;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		1AF73D3330A1DB130074287D /* Dependencies in Frameworks */ = {isa = PBXBuildFile; productRef = 1AF73D3230A1DB130074287D /* Dependencies */; };
+		1AF73D3530A1DB130074287D /* DependenciesMacros in Frameworks */ = {isa = PBXBuildFile; productRef = 1AF73D3430A1DB130074287D /* DependenciesMacros */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		000000000000000000000120 /* TicTacToe Client.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TicTacToe Client.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A83F87A3098494F00096B35 /* TicTacToe-Client-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "TicTacToe-Client-Info.plist"; sourceTree = "<group>"; };
@@ -23,6 +28,8 @@
 		000000000000000130000000 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			files = (
+				1AF73D3530A1DB130074287D /* DependenciesMacros in Frameworks */,
+				1AF73D3330A1DB130074287D /* Dependencies in Frameworks */,
 			);
 		};
 /* End PBXFrameworksBuildPhase section */
@@ -62,6 +69,10 @@
 				000000000000000000000010 /* TicTacToe Client */,
 			);
 			name = "TicTacToe Client";
+			packageProductDependencies = (
+				1AF73D3230A1DB130074287D /* Dependencies */,
+				1AF73D3430A1DB130074287D /* DependenciesMacros */,
+			);
 			productName = MyApp;
 			productReference = 000000000000000000000120 /* TicTacToe Client.app */;
 			productType = "com.apple.product-type.application";
@@ -90,6 +101,9 @@
 			);
 			mainGroup = 000000000000000000000001;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				1AF73D3130A1DB130074287D /* XCRemoteSwiftPackageReference "swift-dependencies" */,
+			);
 			preferredProjectObjectVersion = 90;
 			productRefGroup = 000000000000000000000020 /* Products */;
 			projectDirPath = "";
@@ -295,7 +309,7 @@
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
 			};
 			name = Debug;
@@ -344,7 +358,7 @@
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
 			};
 			name = Release;
@@ -369,6 +383,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		1AF73D3130A1DB130074287D /* XCRemoteSwiftPackageReference "swift-dependencies" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-dependencies";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.17.2;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		1AF73D3230A1DB130074287D /* Dependencies */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1AF73D3130A1DB130074287D /* XCRemoteSwiftPackageReference "swift-dependencies" */;
+			productName = Dependencies;
+		};
+		1AF73D3430A1DB130074287D /* DependenciesMacros */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1AF73D3130A1DB130074287D /* XCRemoteSwiftPackageReference "swift-dependencies" */;
+			productName = DependenciesMacros;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 000000000000000000000000 /* Project object */;
 }

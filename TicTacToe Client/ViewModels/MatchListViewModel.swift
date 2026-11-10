@@ -41,7 +41,9 @@ final class MatchListViewModel {
             return
         }
 
-        matches = try await server.fetchMatches(player1: player1, player2: player2, context: context)
+        let dto = try await server.fetchMatches(player1: player1, player2: player2)
+        matches = try dto.map { try Match(from: $0, usingContext: context) }
+        try context.save()
     }
     
     func createMatch(withContext context: ModelContext, server: ServerProtocol) async throws -> Match? {
@@ -51,8 +53,10 @@ final class MatchListViewModel {
             return nil
         }
         
-        let newMatch = try await server.createMatch(player1: player1, player2: player2, context: context)
+        let dto = try await server.createMatch(player1: player1, player2: player2)
+        let newMatch = try Match(from: dto, usingContext: context)
         matches.append(newMatch)
+        try context.save()
         return newMatch
     }
 
