@@ -7,11 +7,12 @@
 
 import SwiftUI
 import SwiftData
+import Dependencies
 
 struct BoardView: View {
     @Bindable var viewModel: BoardViewModel
     @Environment(\.modelContext) private var context
-    @Environment(Server.self) private var server
+    @Dependency(\.server) private var server
     
     var body: some View {
         Text("Match")
@@ -74,9 +75,8 @@ struct BoardView: View {
 }
 
 #Preview {
-//    @Previewable @Environment(Session.self) var session
-//    BoardView(viewModel: BoardViewModel(session: session))
-    
+    @Dependency(\.server) var server
+
     let player1 = Player(firstName: "Bob", lastName: "Foo")
     let player2 = Player(firstName: "Fred", lastName: "Bar")
     

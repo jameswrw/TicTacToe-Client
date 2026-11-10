@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftData
+import Dependencies
 
 enum RestMethod: String {
     case get = "GET"
@@ -16,7 +17,7 @@ enum RestMethod: String {
     case delete = "DELETE"
 }
 
-nonisolated final class Server: ServerProtocol, Observable {
+struct Server: ServerProtocol, Observable {
     
     nonisolated(unsafe) var baseURL: URL
     let session: URLSession = .shared

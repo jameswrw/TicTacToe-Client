@@ -8,7 +8,7 @@
 import Dependencies
 import Foundation
 
-nonisolated final class TestServer: ServerProtocol {
+struct TestServer: ServerProtocol {
     func login(credentials: Credentials) async throws -> PlayerDTO {
         reportIssue("TestServer.login() unimplemented")
         return PlayerDTO.mock()
@@ -38,6 +38,4 @@ nonisolated final class TestServer: ServerProtocol {
         reportIssue("TestServer.createMatch() unimplemented")
         return MatchDTO.mock()
     }
-    
-    
 }

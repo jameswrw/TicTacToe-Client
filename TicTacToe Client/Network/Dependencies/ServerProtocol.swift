@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Dependencies
 
 nonisolated protocol ServerProtocol: Sendable {
 //    func request<T: Decodable>(

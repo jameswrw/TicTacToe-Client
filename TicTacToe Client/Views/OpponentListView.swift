@@ -7,12 +7,14 @@
 
 import SwiftUI
 import SwiftData
+import Dependencies
 
+@MainActor
 struct OpponentListView: View {
     @Bindable var viewModel: OpponentListViewModel
     @State private var showCreatePlayer = false
     @Environment(\.modelContext) private var context
-    @Environment(Server.self) private var server
+    @Dependency(\.server) private var server
 
     var body: some View {
         VStack {
@@ -75,7 +77,18 @@ struct OpponentListView: View {
 }
 
 #Preview {
-    @Previewable @Environment(Session.self) var session
+    @Dependency(\.server) var server
+    
+    let p1 = Player(firstName: "Place", lastName: "Holder")
+    let p2 = Player(firstName: "Someone", lastName: "Else")
+
+    let session = Session(
+        currentPlayer: p1,
+        opponents: [p2],
+        opponent: p2,
+        match: .init(player1: p1, player2: p2, board: "OO..XXO.X")
+    )
+    
     OpponentListView(viewModel: OpponentListViewModel(session: session))
 }
 

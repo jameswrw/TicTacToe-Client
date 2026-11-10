@@ -9,11 +9,14 @@ import Dependencies
 import DependenciesMacros
 import Foundation
 
-extension DependencyValues {
-    @DependencyEntry(liveValue: { @Sendable in
-        Server(baseURL: URL(string: TicTacToeAPI.baseURL.rawValue)!)
-    }())
-    nonisolated var server: any ServerProtocol = { @Sendable in
-        TestServer()
-    }()
+nonisolated private enum ServerKey: DependencyKey {
+    static let liveValue: ServerProtocol = Server(baseURL: URL(string: TicTacToeAPI.baseURL.rawValue)!)
+    static let testValue: ServerProtocol = TestServer()
+    static let previewValue: ServerProtocol = PreviewServer()
 }
+
+extension DependencyValues {
+    nonisolated var server: ServerProtocol {
+      get { self[ServerKey.self] }
+      set { self[ServerKey.self] = newValue }
+    }}

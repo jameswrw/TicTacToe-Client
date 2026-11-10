@@ -7,12 +7,13 @@
 
 import SwiftUI
 import SwiftData
+import Dependencies
 
 struct LoginView: View {
     
     @Environment(Session.self) var session
     @Environment(\.modelContext) private var context
-    @Environment(Server.self) private var server
+    @Dependency(\.server) private var server
     @State private var viewModel: LoginViewModel
     
     var opponentListViewModel: OpponentListViewModel
@@ -46,7 +47,17 @@ struct LoginView: View {
 }
 
 #Preview {
-    @Previewable @Environment(Session.self) var session
+    @Dependency(\.server) var server
+    
+    let p1 = Player(firstName: "Place", lastName: "Holder")
+    let p2 = Player(firstName: "Someone", lastName: "Else")
+
+    let session = Session(
+        currentPlayer: p1,
+        opponents: [p2],
+        opponent: p2,
+        match: .init(player1: p1, player2: p2, board: "OO..XXO.X")
+    )
     LoginView(
         viewModel: LoginViewModel(session: session),
         playerViewModel: OpponentListViewModel(session: session)
