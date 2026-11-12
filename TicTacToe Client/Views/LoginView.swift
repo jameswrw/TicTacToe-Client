@@ -15,12 +15,9 @@ struct LoginView: View {
     @Environment(\.modelContext) private var context
     @Dependency(\.server) private var server
     @State private var viewModel: LoginViewModel
-    
-    var opponentListViewModel: OpponentListViewModel
         
-    init(viewModel: LoginViewModel, playerViewModel: OpponentListViewModel) {
+    init(viewModel: LoginViewModel) {
         self._viewModel = State(initialValue: viewModel)
-        self.opponentListViewModel = playerViewModel
     }
     
     var body: some View {
@@ -34,7 +31,6 @@ struct LoginView: View {
                     await viewModel.login(server: server, context: context)
                     if let player = session.currentPlayer {
                         context.insert(player)
-                        await opponentListViewModel.fetchOpponents(playerID: player.id, context: context, server: server)
                     }
                 }
             } label: {
@@ -58,8 +54,5 @@ struct LoginView: View {
         opponent: p2,
         match: .init(player1: p1, player2: p2, board: "OO..XXO.X")
     )
-    LoginView(
-        viewModel: LoginViewModel(session: session),
-        playerViewModel: OpponentListViewModel(session: session)
-    )
+    LoginView(viewModel: LoginViewModel(session: session))
 }

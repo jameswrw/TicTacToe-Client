@@ -94,15 +94,16 @@ struct Server: ServerProtocol, Observable {
         guard let url = components?.url else {
             throw APIError.invalidURL
         }
-        let token = accessToken ?? ""
         
         var request = URLRequest(url: url)
         request.httpMethod = method.rawValue
         request.httpBody = body
         request.setValue("application/json", forHTTPHeaderField: "Accept")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-        
+        if let accessToken {
+            request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+        }
+
         return request
     }
 }
