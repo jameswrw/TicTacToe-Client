@@ -1,10 +1,12 @@
 import SwiftUI
 import Playgrounds
+import Dependencies
 
 struct ContentView: View {
     @Environment(Session.self) var session
     @State private var opponentListViewModel: OpponentListViewModel
     @State private var matchListViewModel: MatchListViewModel
+    @Dependency(\.server) private var baseServer
 
     init(session: Session) {
         self._opponentListViewModel = State(initialValue: OpponentListViewModel(session: session))
@@ -19,6 +21,12 @@ struct ContentView: View {
     }
 
     var body: some View {
+        
+        let authenticatedServer = Server(
+            baseURL: baseServer.baseURL,
+            accessToken: session.accessToken
+        )
+        
         NavigationSplitView(
             sidebar: {
                 VStack {
@@ -47,12 +55,12 @@ struct ContentView: View {
                 }
             }
         )
+        .dependency(\.server, authenticatedServer)
     }
 }
 
 #Preview {
     @Previewable @Environment(Session.self) var session
-//    session.match?.board = "O.O.X..X."
     ContentView(session: session)
 }
 

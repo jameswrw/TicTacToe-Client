@@ -19,9 +19,9 @@ enum RestMethod: String {
 
 struct Server: ServerProtocol, Observable {
     
-    nonisolated(unsafe) var baseURL: URL
     let session: URLSession = .shared
-    nonisolated(unsafe) var accessToken: String? = nil
+    var baseURL: URL
+    var accessToken: String? = nil
     
     init(baseURL: URL, accessToken: String? = nil) {
         self.baseURL = baseURL

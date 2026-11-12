@@ -9,14 +9,10 @@ import Foundation
 import Dependencies
 
 nonisolated protocol ServerProtocol: Sendable {
-//    func request<T: Decodable>(
-//        url path: TicTacToeAPI,
-//        body: Data?,
-//        parameters: [URLParameters: String],
-//        queryItems: [URLQueryItem]?,
-//        method: RestMethod
-//    ) async throws -> T
     
+    var baseURL: URL {get set}
+    var accessToken: String? {get set}
+
     func login(credentials: Credentials) async throws -> LoginResponse
     func createPlayer(config: CreatePlayerDTO) async throws -> PlayerDTO
     
@@ -29,6 +25,4 @@ nonisolated protocol ServerProtocol: Sendable {
     func fetchOpponents(playerID: UUID) async throws -> [PlayerDTO]
     func fetchMatches(player1: Player, player2: Player) async throws -> [MatchDTO]
     func createMatch(player1: Player, player2: Player) async throws -> MatchDTO
-    
-    
 }

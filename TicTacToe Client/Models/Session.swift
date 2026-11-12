@@ -16,7 +16,8 @@ final nonisolated class Session {
     // Selected opponent and match identifiers
     var opponent: Player?
     var match: Match?
-
+    var accessToken: String?
+    
     init(currentPlayer: Player? = nil, opponents: [Player] = [], opponent: Player? = nil, match: Match? = nil) {
         self.currentPlayer = currentPlayer
         self.opponents = opponents

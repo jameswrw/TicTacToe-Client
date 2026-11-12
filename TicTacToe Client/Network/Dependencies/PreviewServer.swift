@@ -9,6 +9,9 @@ import Dependencies
 import Foundation
 
 struct PreviewServer: ServerProtocol {
+    var baseURL: URL = URL(string: "https://www.example.com")!
+    var accessToken: String? = nil
+    
     func login(credentials: Credentials) async throws -> LoginResponse {
         return .init(token: "12345", player: PlayerDTO.mock())
     }

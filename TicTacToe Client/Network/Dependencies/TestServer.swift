@@ -9,6 +9,9 @@ import Dependencies
 import Foundation
 
 struct TestServer: ServerProtocol {
+    var baseURL: URL = URL(string: "https://www.example.com")!
+    var accessToken: String? = nil
+    
     func login(credentials: Credentials) async throws -> LoginResponse {
         reportIssue("TestServer.login() unimplemented")
         return .init(token: "12345", player: PlayerDTO.mock())
