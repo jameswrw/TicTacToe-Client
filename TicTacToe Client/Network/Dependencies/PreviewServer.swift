@@ -9,8 +9,8 @@ import Dependencies
 import Foundation
 
 struct PreviewServer: ServerProtocol {
-    func login(credentials: Credentials) async throws -> PlayerDTO {
-        return PlayerDTO.mock()
+    func login(credentials: Credentials) async throws -> LoginResponse {
+        return .init(token: "12345", player: PlayerDTO.mock())
     }
     
     func createPlayer(config: CreatePlayerDTO) async throws -> PlayerDTO {

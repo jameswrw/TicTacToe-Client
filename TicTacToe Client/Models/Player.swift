@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 @Model
-final class Player: Identifiable {
+final nonisolated class Player: Identifiable {
     // Persisted properties
     @Attribute(.unique) var id: UUID
     var firstName: String

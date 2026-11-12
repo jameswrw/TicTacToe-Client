@@ -14,7 +14,7 @@ enum MatchInitError: Error {
 
 
 @Model
-final class Match: Identifiable {
+final nonisolated class Match: Identifiable {
     @Attribute(.unique) var id: UUID
     var player1: Player
     var player2: Player

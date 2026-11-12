@@ -6,7 +6,7 @@
 import Foundation
 
 @Observable
-final class Session {
+final nonisolated class Session {
     // Current logged-in player
     var currentPlayer: Player?
 

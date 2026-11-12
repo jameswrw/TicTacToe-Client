@@ -108,7 +108,7 @@ struct Server: ServerProtocol, Observable {
 }
  
 extension Server {
-    func login(credentials: Credentials) async throws -> PlayerDTO {
+    func login(credentials: Credentials) async throws -> LoginResponse {
         let coder = JSONEncoder()
         let body = try coder.encode(credentials)
         return try await request(

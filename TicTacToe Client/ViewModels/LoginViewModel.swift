@@ -29,7 +29,7 @@ final class LoginViewModel {
         
         do {
             let dto = try await server.login(credentials: credentials)
-            session.currentPlayer = Player(from: dto)
+            session.currentPlayer = Player(from: dto.player)
             try context.save()
         } catch {
             session.currentPlayer = nil

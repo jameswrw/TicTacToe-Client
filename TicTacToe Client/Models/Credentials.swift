@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Credentials: Encodable {
+nonisolated struct Credentials: Encodable {
     let userName: String
     let password: String
 }
